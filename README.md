@@ -1,141 +1,238 @@
 # mcp-reddit-publisher
 
-Servidor MCP para automação segura de publicações no Reddit.
+Servidor MCP para publicar no Reddit com segurança, feito para ser instalado do jeito mais simples possível em Claude, Codex, OpenCode e qualquer cliente MCP via stdio.
 
-Compatível com qualquer cliente MCP via stdio, incluindo Claude Desktop/Claude Code, OpenAI Agents, OpenCode, Cursor, Hermes e outros clientes que aceitam servidores MCP locais.
+Repo: https://github.com/uptrixbr/mcp-reddit-publisher
 
-## O que ele faz
+## Instalação rápida
 
-Ferramentas MCP expostas:
+Você NÃO precisa clonar o projeto nem rodar build manual.
 
-- `health`: valida configuração sem expor segredos.
-- `search_subreddits`: busca comunidades por termo.
-- `get_subreddit_rules`: busca regras do subreddit e aponta riscos de autopromoção.
-- `preview_text_post`: valida e mostra o post sem publicar.
-- `submit_text_post`: publica um text post, respeitando dry-run, allowlist, checagem de regras e rate limit.
-
-## Salvaguardas
-
-Por padrão, nada é publicado:
-
-- `REDDIT_DRY_RUN=true`: `submit_text_post` só retorna preview.
-- `REDDIT_ALLOWED_SUBREDDITS`: quando definido, bloqueia qualquer subreddit fora da lista.
-- `REDDIT_REQUIRE_RULE_CHECK=true`: bloqueia posts quando regras parecem proibir promoção/spam/solicitação.
-- `REDDIT_MIN_SECONDS_BETWEEN_POSTS=300`: evita várias publicações seguidas.
-
-Use automação com responsabilidade: adapte o texto a cada comunidade, leia as regras e evite spam/cross-posting em massa.
-
-## Instalação local
+Use direto via `npx`:
 
 ```bash
-git clone https://github.com/uptrixbr/mcp-reddit-publisher.git
-cd mcp-reddit-publisher
-npm install
-npm run build
-cp .env.example .env
+npx -y github:uptrixbr/mcp-reddit-publisher --help
 ```
 
-Preencha `.env`:
+Para gerar uma configuração pronta para o seu cliente:
 
 ```bash
-REDDIT_CLIENT_ID=...
-REDDIT_CLIENT_SECRET=...
-REDDIT_REFRESH_TOKEN=...
-REDDIT_USER_AGENT=mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO
-REDDIT_DRY_RUN=true
-REDDIT_ALLOWED_SUBREDDITS=saas,startups,SideProject
+npx -y github:uptrixbr/mcp-reddit-publisher setup claude \
+  --client-id "SEU_REDDIT_CLIENT_ID" \
+  --client-secret "SEU_REDDIT_CLIENT_SECRET" \
+  --refresh-token "SEU_REDDIT_REFRESH_TOKEN" \
+  --user-agent "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO" \
+  --allowed "SideProject,saas,startups" \
+  --dry-run true
 ```
 
-Também é possível usar `REDDIT_USERNAME` + `REDDIT_PASSWORD` no lugar de `REDDIT_REFRESH_TOKEN` para apps Reddit do tipo script.
+Troque `claude` por `codex` ou `opencode`:
 
-## Criar app no Reddit
+```bash
+npx -y github:uptrixbr/mcp-reddit-publisher setup codex ...
+npx -y github:uptrixbr/mcp-reddit-publisher setup opencode ...
+```
+
+O comando imprime o bloco de configuração MCP já pronto para copiar e colar.
+
+## Credenciais Reddit
+
+Você precisa criar um app Reddit uma vez:
 
 1. Acesse https://www.reddit.com/prefs/apps
-2. Clique em "create another app".
-3. Escolha tipo "script" para uso pessoal/local.
-4. Copie `client_id` e `client_secret`.
-5. Defina um user agent descritivo, por exemplo:
-   `mcp-reddit-publisher/0.1.0 by u/seu_usuario`
+2. Clique em `create another app`.
+3. Escolha o tipo `script` para uso pessoal/local.
+4. Copie:
+   - `client_id`
+   - `client_secret`
+5. Configure um user agent descritivo, exemplo:
 
-## Rodar manualmente
-
-```bash
-npm run build
-node dist/index.js
+```text
+mcp-reddit-publisher/0.1.0 by u/seu_usuario
 ```
 
-O processo fala MCP por stdio, então normalmente será iniciado pelo cliente MCP, não diretamente por você.
+Autenticação recomendada:
 
-## Claude Desktop
+```text
+REDDIT_REFRESH_TOKEN
+```
 
-Adicione ao `claude_desktop_config.json`:
+Alternativa para app do tipo script:
+
+```text
+REDDIT_USERNAME + REDDIT_PASSWORD
+```
+
+## Claude Desktop / Claude Code
+
+Gere o config:
+
+```bash
+npx -y github:uptrixbr/mcp-reddit-publisher setup claude \
+  --client-id "..." \
+  --client-secret "..." \
+  --refresh-token "..." \
+  --user-agent "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO" \
+  --allowed "SideProject,saas" \
+  --dry-run true
+```
+
+Saída esperada:
 
 ```json
 {
   "mcpServers": {
     "reddit-publisher": {
-      "command": "node",
-      "args": ["/CAMINHO/ABSOLUTO/mcp-reddit-publisher/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "github:uptrixbr/mcp-reddit-publisher"],
       "env": {
         "REDDIT_CLIENT_ID": "...",
         "REDDIT_CLIENT_SECRET": "...",
         "REDDIT_REFRESH_TOKEN": "...",
         "REDDIT_USER_AGENT": "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO",
-        "REDDIT_DRY_RUN": "true",
-        "REDDIT_ALLOWED_SUBREDDITS": "saas,startups"
+        "REDDIT_DRY_RUN": "true"
       }
     }
   }
 }
 ```
 
-## Claude Code / OpenCode / outros clientes MCP
+Cole no arquivo de configuração MCP do Claude e reinicie o Claude.
 
-Use configuração equivalente de servidor stdio:
+## Codex
+
+Gere o config:
+
+```bash
+npx -y github:uptrixbr/mcp-reddit-publisher setup codex \
+  --client-id "..." \
+  --client-secret "..." \
+  --refresh-token "..." \
+  --user-agent "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO" \
+  --dry-run true
+```
+
+Saída esperada em TOML:
+
+```toml
+[mcp_servers.reddit-publisher]
+command = "npx"
+args = ["-y", "github:uptrixbr/mcp-reddit-publisher"]
+env.REDDIT_CLIENT_ID = "..."
+env.REDDIT_CLIENT_SECRET = "..."
+env.REDDIT_REFRESH_TOKEN = "..."
+env.REDDIT_USER_AGENT = "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO"
+env.REDDIT_DRY_RUN = "true"
+```
+
+Adicione ao `config.toml` do Codex e reinicie o Codex.
+
+## OpenCode
+
+Gere o config:
+
+```bash
+npx -y github:uptrixbr/mcp-reddit-publisher setup opencode \
+  --client-id "..." \
+  --client-secret "..." \
+  --refresh-token "..." \
+  --user-agent "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO" \
+  --dry-run true
+```
+
+Saída esperada:
 
 ```json
 {
-  "reddit-publisher": {
-    "command": "node",
-    "args": ["/CAMINHO/ABSOLUTO/mcp-reddit-publisher/dist/index.js"],
-    "env": {
-      "REDDIT_CLIENT_ID": "...",
-      "REDDIT_CLIENT_SECRET": "...",
-      "REDDIT_REFRESH_TOKEN": "...",
-      "REDDIT_USER_AGENT": "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO",
-      "REDDIT_DRY_RUN": "true"
+  "mcp": {
+    "reddit-publisher": {
+      "type": "local",
+      "command": "npx -y github:uptrixbr/mcp-reddit-publisher",
+      "enabled": true,
+      "environment": {
+        "REDDIT_CLIENT_ID": "...",
+        "REDDIT_CLIENT_SECRET": "...",
+        "REDDIT_REFRESH_TOKEN": "...",
+        "REDDIT_USER_AGENT": "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO",
+        "REDDIT_DRY_RUN": "true"
+      }
     }
   }
 }
 ```
 
-## OpenAI Agents SDK
+Adicione ao arquivo de configuração do OpenCode e reinicie o OpenCode.
 
-Se o seu runtime OpenAI suporta MCP stdio, configure um servidor stdio apontando para:
+## OpenAI Agents / outros clientes MCP
 
-```bash
-node /CAMINHO/ABSOLUTO/mcp-reddit-publisher/dist/index.js
+Use o servidor stdio:
+
+```json
+{
+  "command": "npx",
+  "args": ["-y", "github:uptrixbr/mcp-reddit-publisher"],
+  "env": {
+    "REDDIT_CLIENT_ID": "...",
+    "REDDIT_CLIENT_SECRET": "...",
+    "REDDIT_REFRESH_TOKEN": "...",
+    "REDDIT_USER_AGENT": "mcp-reddit-publisher/0.1.0 by u/SEU_USUARIO",
+    "REDDIT_DRY_RUN": "true"
+  }
+}
 ```
 
-Mantenha as mesmas variáveis de ambiente do exemplo acima.
+## Ferramentas MCP disponíveis
 
-## Exemplo de uso por agente
+- `health`: valida a configuração sem expor secrets.
+- `search_subreddits`: busca comunidades por termo.
+- `get_subreddit_rules`: lê regras do subreddit e aponta riscos.
+- `preview_text_post`: valida e mostra o post sem publicar.
+- `submit_text_post`: publica o post, respeitando dry-run, allowlist, checagem de regras e rate limit.
 
-Peça ao agente:
+## Segurança por padrão
 
-> Busque subreddits sobre SaaS, leia as regras de r/SideProject, gere uma versão nativa do post pedindo feedback e faça preview. Não publique ainda.
+Por padrão, nada é publicado:
 
-Depois, com `REDDIT_DRY_RUN=false`, você pode pedir:
+```text
+REDDIT_DRY_RUN=true
+```
 
-> Publique em r/SideProject somente se as regras permitirem e me retorne o permalink.
+Recomendações:
 
-## Desenvolvimento
+```text
+REDDIT_ALLOWED_SUBREDDITS=SideProject,saas,startups
+REDDIT_REQUIRE_RULE_CHECK=true
+REDDIT_MIN_SECONDS_BETWEEN_POSTS=300
+```
+
+Só mude para publicação real depois de testar:
+
+```text
+REDDIT_DRY_RUN=false
+```
+
+## Exemplo de prompt depois de instalar
+
+```text
+Use o reddit-publisher para buscar subreddits sobre SaaS, verificar as regras de r/SideProject e preparar um post pedindo feedback. Faça apenas preview, não publique.
+```
+
+Depois, se estiver tudo certo e `REDDIT_DRY_RUN=false`:
+
+```text
+Publique em r/SideProject somente se as regras permitirem e me retorne o permalink.
+```
+
+## Desenvolvimento local
 
 ```bash
+git clone https://github.com/uptrixbr/mcp-reddit-publisher.git
+cd mcp-reddit-publisher
 npm install
 npm run typecheck
 npm test
 npm run build
+node scripts/smoke.mjs
 ```
 
 ## Licença

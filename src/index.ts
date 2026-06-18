@@ -3,6 +3,13 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import { loadConfig, validatePostCredentialConfig } from './config.js';
+import {
+  DEFAULT_NPX_PACKAGE_SPEC,
+  buildEnvFromFlags,
+  parseCliArgs,
+  renderHelp,
+  renderSetup
+} from './cli.js';
 import { RedditClient } from './reddit.js';
 import {
   RateLimiter,
@@ -11,7 +18,57 @@ import {
   normalizeSubreddit
 } from './safety.js';
 
+const cli = parseCliArgs(process.argv.slice(2));
+
+if (cli.command === '--help' || cli.command === '-h' || cli.command === 'help') {
+  console.log(renderHelp());
+  process.exit(0);
+}
+
+if (cli.command === 'setup') {
+  const target = cli.target ?? 'json';
+  if (!['claude', 'codex', 'opencode', 'json'].includes(target)) {
+    console.error('Target inválido. Use: claude, codex, opencode ou json.');
+    process.exit(1);
+  }
+  console.log(
+    renderSetup({
+      target: target as 'claude' | 'codex' | 'opencode' | 'json',
+      packageSpec: cli.flags.package ?? DEFAULT_NPX_PACKAGE_SPEC,
+      env: buildEnvFromFlags(cli.flags)
+    })
+  );
+  process.exit(0);
+}
+
 const config = loadConfig();
+
+if (cli.command === 'doctor') {
+  const missing = validatePostCredentialConfig(config);
+  console.log(
+    JSON.stringify(
+      {
+        ok: missing.length === 0,
+        dryRun: config.dryRun,
+        allowedSubreddits: config.allowedSubreddits,
+        requireRuleCheck: config.requireRuleCheck,
+        minSecondsBetweenPosts: config.minSecondsBetweenPosts,
+        redditUserAgent: config.redditUserAgent,
+        missing
+      },
+      null,
+      2
+    )
+  );
+  process.exit(missing.length === 0 ? 0 : 1);
+}
+
+if (cli.command !== 'serve') {
+  console.error(`Comando desconhecido: ${cli.command}`);
+  console.error(renderHelp());
+  process.exit(1);
+}
+
 const reddit = new RedditClient(config);
 const rateLimiter = new RateLimiter(config.minSecondsBetweenPosts);
 
