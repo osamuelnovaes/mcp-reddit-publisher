@@ -4,7 +4,7 @@ export type SetupOptions = {
   env: Record<string, string>;
 };
 
-const DEFAULT_PACKAGE_SPEC = 'mcp-reddit-publisher';
+const DEFAULT_PACKAGE_SPEC = 'github:osamuelnovaes/mcp-reddit-publisher';
 
 export function parseCliArgs(argv: string[]): { command: string; target?: string; flags: Record<string, string> } {
   const [command = 'serve', maybeTarget, ...rest] = argv;

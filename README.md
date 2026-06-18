@@ -3,22 +3,22 @@
 Servidor MCP para publicar no Reddit com segurança, feito para ser instalado do jeito mais simples possível em Claude, Codex, OpenCode e qualquer cliente MCP via stdio.
 
 Repo: https://github.com/osamuelnovaes/mcp-reddit-publisher
-Pacote npm: mcp-reddit-publisher
+Pacote npm: mcp-reddit-publisher (reservado para publicação futura; por enquanto use o GitHub via npx)
 
 ## Instalação rápida
 
 Você NÃO precisa clonar o projeto nem rodar build manual.
 
-Use direto via npm/npx:
+Use direto via GitHub/npx:
 
 ```bash
-npx -y mcp-reddit-publisher --help
+npx -y github:osamuelnovaes/mcp-reddit-publisher --help
 ```
 
 Para gerar uma configuração pronta para o seu cliente:
 
 ```bash
-npx -y mcp-reddit-publisher setup claude \
+npx -y github:osamuelnovaes/mcp-reddit-publisher setup claude \
   --client-id "SEU_REDDIT_CLIENT_ID" \
   --client-secret "SEU_REDDIT_CLIENT_SECRET" \
   --refresh-token "SEU_REDDIT_REFRESH_TOKEN" \
@@ -30,16 +30,16 @@ npx -y mcp-reddit-publisher setup claude \
 Troque `claude` por `codex` ou `opencode`:
 
 ```bash
-npx -y mcp-reddit-publisher setup codex ...
-npx -y mcp-reddit-publisher setup opencode ...
+npx -y github:osamuelnovaes/mcp-reddit-publisher setup codex ...
+npx -y github:osamuelnovaes/mcp-reddit-publisher setup opencode ...
 ```
 
 O comando imprime o bloco de configuração MCP já pronto para copiar e colar.
 
-Fallback sem npm registry, direto do GitHub:
+Depois que o pacote for publicado no npm registry, este comando curto também vai funcionar:
 
 ```bash
-npx -y github:osamuelnovaes/mcp-reddit-publisher --help
+npx -y mcp-reddit-publisher --help
 ```
 
 ## Credenciais Reddit
@@ -75,7 +75,7 @@ REDDIT_USERNAME + REDDIT_PASSWORD
 Gere o config:
 
 ```bash
-npx -y mcp-reddit-publisher setup claude \
+npx -y github:osamuelnovaes/mcp-reddit-publisher setup claude \
   --client-id "..." \
   --client-secret "..." \
   --refresh-token "..." \
@@ -91,7 +91,7 @@ Saída esperada:
   "mcpServers": {
     "reddit-publisher": {
       "command": "npx",
-      "args": ["-y", "mcp-reddit-publisher"],
+      "args": ["-y", "github:osamuelnovaes/mcp-reddit-publisher"],
       "env": {
         "REDDIT_CLIENT_ID": "...",
         "REDDIT_CLIENT_SECRET": "...",
@@ -111,7 +111,7 @@ Cole no arquivo de configuração MCP do Claude e reinicie o Claude.
 Gere o config:
 
 ```bash
-npx -y mcp-reddit-publisher setup codex \
+npx -y github:osamuelnovaes/mcp-reddit-publisher setup codex \
   --client-id "..." \
   --client-secret "..." \
   --refresh-token "..." \
@@ -124,7 +124,7 @@ Saída esperada em TOML:
 ```toml
 [mcp_servers.reddit-publisher]
 command = "npx"
-args = ["-y", "mcp-reddit-publisher"]
+args = ["-y", "github:osamuelnovaes/mcp-reddit-publisher"]
 env.REDDIT_CLIENT_ID = "..."
 env.REDDIT_CLIENT_SECRET = "..."
 env.REDDIT_REFRESH_TOKEN = "..."
@@ -139,7 +139,7 @@ Adicione ao `config.toml` do Codex e reinicie o Codex.
 Gere o config:
 
 ```bash
-npx -y mcp-reddit-publisher setup opencode \
+npx -y github:osamuelnovaes/mcp-reddit-publisher setup opencode \
   --client-id "..." \
   --client-secret "..." \
   --refresh-token "..." \
@@ -154,7 +154,7 @@ Saída esperada:
   "mcp": {
     "reddit-publisher": {
       "type": "local",
-      "command": "npx -y mcp-reddit-publisher",
+      "command": "npx -y github:osamuelnovaes/mcp-reddit-publisher",
       "enabled": true,
       "environment": {
         "REDDIT_CLIENT_ID": "...",
@@ -177,7 +177,7 @@ Use o servidor stdio:
 ```json
 {
   "command": "npx",
-  "args": ["-y", "mcp-reddit-publisher"],
+  "args": ["-y", "github:osamuelnovaes/mcp-reddit-publisher"],
   "env": {
     "REDDIT_CLIENT_ID": "...",
     "REDDIT_CLIENT_SECRET": "...",
