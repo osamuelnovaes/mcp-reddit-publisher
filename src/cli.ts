@@ -140,3 +140,4 @@ Flags úteis do setup:
 }
 
 export const DEFAULT_NPX_PACKAGE_SPEC = DEFAULT_PACKAGE_SPEC;
+

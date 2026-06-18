@@ -2,7 +2,7 @@
 
 Servidor MCP para publicar no Reddit com segurança, feito para ser instalado do jeito mais simples possível em Claude, Codex, OpenCode e qualquer cliente MCP via stdio.
 
-Repo: https://github.com/uptrixbr/mcp-reddit-publisher
+Repo: https://github.com/osamuelnovaes/mcp-reddit-publisher
 Pacote npm: mcp-reddit-publisher
 
 ## Instalação rápida
@@ -39,7 +39,7 @@ O comando imprime o bloco de configuração MCP já pronto para copiar e colar.
 Fallback sem npm registry, direto do GitHub:
 
 ```bash
-npx -y github:uptrixbr/mcp-reddit-publisher --help
+npx -y github:osamuelnovaes/mcp-reddit-publisher --help
 ```
 
 ## Credenciais Reddit
@@ -233,7 +233,7 @@ Publique em r/SideProject somente se as regras permitirem e me retorne o permali
 ## Desenvolvimento local
 
 ```bash
-git clone https://github.com/uptrixbr/mcp-reddit-publisher.git
+git clone https://github.com/osamuelnovaes/mcp-reddit-publisher.git
 cd mcp-reddit-publisher
 npm install
 npm run typecheck
@@ -244,11 +244,6 @@ node scripts/smoke.mjs
 
 ## Licença
 
-Uso permitido para uso pessoal, avaliação, integrações e uso interno.
+MIT
 
-Não é permitido vender, redistribuir comercialmente, republicar como seu, remover créditos, fazer white-label ou oferecer como produto/SaaS/serviço próprio sem autorização por escrito.
-
-Crédito obrigatório: MCP Reddit Publisher by Samuel Novaes / UptrixBR.
-
-Veja `LICENSE`.
 

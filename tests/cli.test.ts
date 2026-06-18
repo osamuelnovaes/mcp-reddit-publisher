@@ -37,3 +37,4 @@ describe('cli helpers', () => {
     expect(rendered).toContain('mcp-reddit-publisher');
   });
 });
+

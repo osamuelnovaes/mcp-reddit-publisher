@@ -29,15 +29,15 @@
     "opencode",
     "automation"
   ],
-  "author": "Samuel Novaes / UptrixBR",
-  "license": "SEE LICENSE IN LICENSE",
+  "author": "Samuel Novaes",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/uptrixbr/mcp-reddit-publisher.git"
+    "url": "git+https://github.com/osamuelnovaes/mcp-reddit-publisher.git"
   },
-  "homepage": "https://github.com/uptrixbr/mcp-reddit-publisher#readme",
+  "homepage": "https://github.com/osamuelnovaes/mcp-reddit-publisher#readme",
   "bugs": {
-    "url": "https://github.com/uptrixbr/mcp-reddit-publisher/issues"
+    "url": "https://github.com/osamuelnovaes/mcp-reddit-publisher/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -57,3 +57,4 @@
     "node": ">=20"
   }
 }
+
