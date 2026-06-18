@@ -6,6 +6,8 @@ import { loadConfig, validatePostCredentialConfig } from './config.js';
 import {
   DEFAULT_NPX_PACKAGE_SPEC,
   buildEnvFromFlags,
+  installClaudeCode,
+  installClaudeDesktop,
   parseCliArgs,
   renderHelp,
   renderSetup
@@ -39,6 +41,27 @@ if (cli.command === 'setup') {
     })
   );
   process.exit(0);
+}
+
+if (cli.command === 'install' || cli.command === 'init') {
+  const target = cli.target ?? 'claude-code';
+  const packageSpec = cli.flags.package ?? DEFAULT_NPX_PACKAGE_SPEC;
+  const env = buildEnvFromFlags(cli.flags);
+  try {
+    if (target === 'claude-code' || target === 'claude') {
+      console.log(installClaudeCode(packageSpec, env, cli.flags.scope ?? 'user'));
+      process.exit(0);
+    }
+    if (target === 'claude-desktop' || target === 'desktop') {
+      console.log(installClaudeDesktop(packageSpec, env));
+      process.exit(0);
+    }
+    console.error('Target inválido. Use: claude-code ou claude-desktop.');
+    process.exit(1);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
 }
 
 const config = loadConfig();

@@ -1,10 +1,18 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { spawnSync } from 'node:child_process';
+
 export type SetupOptions = {
   target: 'claude' | 'codex' | 'opencode' | 'json';
   packageSpec: string;
   env: Record<string, string>;
 };
 
+export type InstallTarget = 'claude-code' | 'claude-desktop';
+
 const DEFAULT_PACKAGE_SPEC = 'github:osamuelnovaes/mcp-reddit-publisher';
+const SERVER_NAME = 'reddit-publisher';
 
 export function parseCliArgs(argv: string[]): { command: string; target?: string; flags: Record<string, string> } {
   const [command = 'serve', maybeTarget, ...rest] = argv;
@@ -49,10 +57,17 @@ export function buildEnvFromFlags(flags: Record<string, string>): Record<string,
   return env;
 }
 
+export function serverConfig(packageSpec: string, env: Record<string, string>) {
+  return {
+    command: 'npx',
+    args: ['-y', packageSpec],
+    env
+  };
+}
+
 export function renderSetup(options: SetupOptions): string {
-  const command = 'npx';
-  const args = ['-y', options.packageSpec];
-  const env = options.env;
+  const config = serverConfig(options.packageSpec, options.env);
+  const { command, args, env } = config;
 
   if (options.target === 'claude') {
     return [
@@ -61,7 +76,7 @@ export function renderSetup(options: SetupOptions): string {
       JSON.stringify(
         {
           mcpServers: {
-            'reddit-publisher': { command, args, env }
+            [SERVER_NAME]: config
           }
         },
         null,
@@ -76,7 +91,7 @@ export function renderSetup(options: SetupOptions): string {
     return [
       'Codex config.toml:',
       '',
-      '[mcp_servers.reddit-publisher]',
+      `[mcp_servers.${SERVER_NAME}]`,
       `command = "${command}"`,
       `args = ${JSON.stringify(args)}`,
       ...Object.entries(env).map(([key, value]) => `env.${key} = ${JSON.stringify(value)}`),
@@ -92,7 +107,7 @@ export function renderSetup(options: SetupOptions): string {
       JSON.stringify(
         {
           mcp: {
-            'reddit-publisher': {
+            [SERVER_NAME]: {
               type: 'local',
               command: [command, ...args].join(' '),
               enabled: true,
@@ -108,39 +123,82 @@ export function renderSetup(options: SetupOptions): string {
     ].join('\n');
   }
 
-  return JSON.stringify({ command, args, env }, null, 2);
+  return JSON.stringify(config, null, 2);
+}
+
+function claudeDesktopConfigPath(): string {
+  if (process.platform === 'darwin') {
+    return join(homedir(), 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
+  }
+  if (process.platform === 'win32') {
+    return join(process.env.APPDATA ?? join(homedir(), 'AppData', 'Roaming'), 'Claude', 'claude_desktop_config.json');
+  }
+  return join(homedir(), '.config', 'Claude', 'claude_desktop_config.json');
+}
+
+export function installClaudeDesktop(packageSpec: string, env: Record<string, string>): string {
+  const path = claudeDesktopConfigPath();
+  let config: { mcpServers?: Record<string, unknown>; [key: string]: unknown } = {};
+  if (existsSync(path)) {
+    const raw = readFileSync(path, 'utf8').trim();
+    if (raw) config = JSON.parse(raw);
+  }
+  config.mcpServers = {
+    ...(config.mcpServers ?? {}),
+    [SERVER_NAME]: serverConfig(packageSpec, env)
+  };
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, `${JSON.stringify(config, null, 2)}\n`);
+  return `Instalado no Claude Desktop: ${path}\nReinicie o Claude Desktop para carregar o MCP.`;
+}
+
+export function installClaudeCode(packageSpec: string, env: Record<string, string>, scope = 'user'): string {
+  const config = JSON.stringify(serverConfig(packageSpec, env));
+  const result = spawnSync('claude', ['mcp', 'add-json', SERVER_NAME, config, '--scope', scope], {
+    encoding: 'utf8'
+  });
+  if (result.error) {
+    throw new Error(`Não consegui executar 'claude'. Instale o Claude Code ou use: setup claude\n${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    throw new Error(`Claude Code retornou erro:\n${result.stderr || result.stdout}`);
+  }
+  return `${result.stdout.trim()}\nInstalado no Claude Code. Reinicie o Claude Code se ele já estava aberto.`.trim();
 }
 
 export function renderHelp(): string {
   return `mcp-reddit-publisher
 
-Se este texto apareceu, a instalação via npx funcionou.
-O --help só mostra esta ajuda; para instalar no Claude/Codex/OpenCode, rode um comando setup abaixo.
+Instalação mais simples:
+  npx -y ${DEFAULT_PACKAGE_SPEC} install claude-code --client-id ID --client-secret SECRET --refresh-token TOKEN --user-agent "mcp-reddit-publisher/0.1.0 by u/USER"
 
-Uso como servidor MCP:
-  npx -y ${DEFAULT_PACKAGE_SPEC}
+Claude Desktop:
+  npx -y ${DEFAULT_PACKAGE_SPEC} install claude-desktop --client-id ID --client-secret SECRET --refresh-token TOKEN --user-agent "mcp-reddit-publisher/0.1.0 by u/USER"
 
-Gerar configuração pronta:
+Testar se o pacote roda:
+  npx -y ${DEFAULT_PACKAGE_SPEC} --help
+
+Gerar configuração para copiar/colar:
   npx -y ${DEFAULT_PACKAGE_SPEC} setup claude --client-id ID --client-secret SECRET --refresh-token TOKEN --user-agent "mcp-reddit-publisher/0.1.0 by u/USER"
   npx -y ${DEFAULT_PACKAGE_SPEC} setup codex --client-id ID --client-secret SECRET --refresh-token TOKEN
   npx -y ${DEFAULT_PACKAGE_SPEC} setup opencode --client-id ID --client-secret SECRET --refresh-token TOKEN
 
 Comandos:
-  setup <claude|codex|opencode|json>  Gera snippet de configuração MCP
-  doctor                              Mostra status da configuração atual
-  serve                               Inicia o servidor MCP por stdio (padrão)
+  install <claude-code|claude-desktop> Instala automaticamente quando possível
+  setup <claude|codex|opencode|json>   Gera snippet de configuração MCP
+  doctor                               Mostra status da configuração atual
+  serve                                Inicia o servidor MCP por stdio (padrão)
 
-Flags úteis do setup:
+Flags úteis:
   --client-id VALUE
   --client-secret VALUE
   --refresh-token VALUE
   --user-agent VALUE
   --allowed subreddit1,subreddit2
-  --dry-run true|false
-  --require-rule-check true|false
-  --min-seconds-between-posts 300
+  --dry-run true|false                 Padrão: true
+  --require-rule-check true|false      Padrão: true
+  --min-seconds-between-posts 300      Padrão: 300
 `;
 }
 
 export const DEFAULT_NPX_PACKAGE_SPEC = DEFAULT_PACKAGE_SPEC;
-
