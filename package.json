@@ -1,0 +1,46 @@
+{
+  "name": "mcp-reddit-publisher",
+  "version": "0.1.0",
+  "description": "MCP server for safe Reddit publishing automation, compatible with Claude, OpenAI Agents, OpenCode and other MCP clients.",
+  "type": "module",
+  "bin": {
+    "mcp-reddit-publisher": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "mcp",
+    "reddit",
+    "claude",
+    "openai",
+    "opencode",
+    "automation"
+  ],
+  "author": "Samuel Novaes",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.3",
+    "dotenv": "^17.2.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
