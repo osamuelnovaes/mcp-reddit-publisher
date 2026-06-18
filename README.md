@@ -15,6 +15,8 @@ Use direto via GitHub/npx:
 npx -y github:osamuelnovaes/mcp-reddit-publisher --help
 ```
 
+Se aparecer a tela de ajuda, está tudo certo: o pacote foi baixado e executado via npx. Esse comando é apenas um teste de instalação, não conecta o MCP em nenhum cliente ainda.
+
 Para gerar uma configuração pronta para o seu cliente:
 
 ```bash

@@ -114,6 +114,9 @@ export function renderSetup(options: SetupOptions): string {
 export function renderHelp(): string {
   return `mcp-reddit-publisher
 
+Se este texto apareceu, a instalação via npx funcionou.
+O --help só mostra esta ajuda; para instalar no Claude/Codex/OpenCode, rode um comando setup abaixo.
+
 Uso como servidor MCP:
   npx -y ${DEFAULT_PACKAGE_SPEC}
 
