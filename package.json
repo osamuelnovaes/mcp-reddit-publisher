@@ -29,8 +29,19 @@
     "opencode",
     "automation"
   ],
-  "author": "Samuel Novaes",
-  "license": "MIT",
+  "author": "Samuel Novaes / UptrixBR",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uptrixbr/mcp-reddit-publisher.git"
+  },
+  "homepage": "https://github.com/uptrixbr/mcp-reddit-publisher#readme",
+  "bugs": {
+    "url": "https://github.com/uptrixbr/mcp-reddit-publisher/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.23.3",
     "dotenv": "^17.2.3",

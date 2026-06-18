@@ -1,21 +1,63 @@
-MIT License
+MCP Reddit Publisher Source-Available License
+Version 1.0
+Copyright (c) 2026 Samuel Novaes and UptrixBR. All rights reserved.
 
-Copyright (c) 2026 Samuel Novaes
+This software, including its source code, documentation, package metadata, examples, and related materials (the "Software"), is owned by Samuel Novaes and UptrixBR.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Permission Granted
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+You may install and use the Software for personal use, internal business use, evaluation, and integration with your own AI/MCP clients, provided that you comply with this license.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+You may copy the Software as reasonably necessary to install, run, test, or back up your own authorized use.
+
+2. Attribution Required
+
+Any public use, public reference, fork, derivative work, demo, tutorial, integration listing, or distribution that includes or is based on the Software must give clear and visible credit to:
+
+  MCP Reddit Publisher by Samuel Novaes / UptrixBR
+  https://github.com/uptrixbr/mcp-reddit-publisher
+
+You may not remove, hide, or alter copyright notices, license notices, author names, package metadata, repository links, or attribution statements included in the Software.
+
+3. Restrictions
+
+You may not, without prior written permission from Samuel Novaes or UptrixBR:
+
+- sell, rent, lease, sublicense, or commercially redistribute the Software;
+- publish, package, or distribute the Software under your own name or brand;
+- claim authorship or ownership of the Software;
+- offer the Software, or a substantially similar derivative, as a paid product, paid service, marketplace listing, hosted MCP service, SaaS, agency deliverable, template, boilerplate, or commercial automation product;
+- remove or replace attribution to Samuel Novaes / UptrixBR;
+- use the Software to create a competing commercial MCP Reddit publisher or automation product;
+- use the project name, author name, repository identity, or package identity in a way that suggests endorsement, partnership, or ownership unless explicitly authorized.
+
+4. Modifications
+
+You may modify the Software for your own personal or internal business use.
+
+If you publicly share modified versions, forks, examples, or derivative works, you must:
+
+- keep this license attached;
+- clearly state that your version is modified;
+- keep visible attribution to Samuel Novaes / UptrixBR;
+- not sell, rebrand, or present the modified version as your own original product.
+
+5. No Transfer of Ownership
+
+This license does not transfer copyright, trademark rights, ownership, or any other intellectual property rights. All rights not expressly granted are reserved by Samuel Novaes and UptrixBR.
+
+6. Reddit and Third-Party Services
+
+The Software interacts with Reddit and other third-party clients through their APIs and MCP integrations. You are responsible for complying with Reddit's terms, subreddit rules, platform policies, and all applicable laws.
+
+7. No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, SECURITY, AVAILABILITY, OR RELIABILITY.
+
+8. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE AUTHORS AND COPYRIGHT HOLDERS SHALL NOT BE LIABLE FOR ANY CLAIM, DAMAGES, LOSSES, OR OTHER LIABILITY ARISING FROM OR RELATED TO THE SOFTWARE OR ITS USE.
+
+9. Commercial Licensing
+
+For resale rights, white-label rights, hosted service rights, commercial redistribution, or other permissions not granted here, contact Samuel Novaes / UptrixBR for a separate written commercial license.

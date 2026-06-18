@@ -26,14 +26,14 @@ describe('cli helpers', () => {
     expect(env.REDDIT_DRY_RUN).toBe('true');
   });
 
-  it('renders claude config using npx github package', () => {
+  it('renders claude config using npx npm package', () => {
     const rendered = renderSetup({
       target: 'claude',
-      packageSpec: 'github:uptrixbr/mcp-reddit-publisher',
+      packageSpec: 'mcp-reddit-publisher',
       env: { REDDIT_CLIENT_ID: 'id' }
     });
     expect(rendered).toContain('mcpServers');
     expect(rendered).toContain('npx');
-    expect(rendered).toContain('github:uptrixbr/mcp-reddit-publisher');
+    expect(rendered).toContain('mcp-reddit-publisher');
   });
 });
